@@ -15,6 +15,13 @@ const PORT = process.env.PORT || 4000;
 
 connectDB();
 
+if (process.env.NODE_ENV === "development") {
+  const morgan = require("morgan");
+  app.use(morgan("dev"));
+} else {
+  console.log(process.env.NODE_ENV);
+}
+
 app.use(logger);
 
 app.use(cors(corsOptions));
@@ -26,6 +33,8 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes/root"));
+
+app.use("/api/v1/users", require("./routes/userRoutes"));
 
 app.all("*", (req, res) => {
   res.status(404);
